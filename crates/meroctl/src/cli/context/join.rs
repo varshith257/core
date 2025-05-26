@@ -7,6 +7,7 @@ use comfy_table::{Cell, Color, Table};
 use eyre::Result as EyreResult;
 use reqwest::Client;
 
+use crate::cli::context::identity::temp_identity_store::get_identity_by_public;
 use crate::cli::Environment;
 use crate::common::{
     create_alias, do_request, fetch_multiaddr, load_config, multiaddr_to_url, RequestType,
@@ -20,7 +21,7 @@ pub struct JoinCommand {
         value_name = "PRIVATE_KEY",
         help = "The private key for signing the join context request"
     )]
-    pub private_key: PrivateKey,
+    pub private_key: Option<PrivateKey>,
     #[clap(
         value_name = "INVITE",
         help = "The invitation payload for joining the context"
@@ -55,11 +56,20 @@ impl JoinCommand {
         let config = load_config(&environment.args.home, &environment.args.node_name).await?;
         let multiaddr = fetch_multiaddr(&config)?;
 
+        let private_key = match self.private_key {
+            Some(key) => key,
+            None => {
+                let pubkey = self.invitation_payload.invitee();
+                get_identity_by_public(pubkey)
+                    .ok_or_eyre("Private key not found in temporary store. Please pass --private-key or generate one using `context identity generate`.")?
+            }
+        };
+
         let response: JoinContextResponse = do_request(
             &Client::new(),
             multiaddr_to_url(multiaddr, "admin-api/dev/contexts/join")?,
             Some(JoinContextRequest::new(
-                self.private_key,
+                private_key,
                 self.invitation_payload,
             )),
             &config.identity,

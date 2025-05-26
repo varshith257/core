@@ -1,10 +1,10 @@
-use super::temp_identity_store::{store_identity, IdentityPair};
 use calimero_primitives::identity::PrivateKey;
 use calimero_server_primitives::admin::GenerateContextIdentityResponse;
 use clap::Parser;
 use comfy_table::{Cell, Color, Table};
 use eyre::Result as EyreResult;
 
+use super::temp_identity_store::{store_identity, IdentityPair};
 use crate::cli::Environment;
 use crate::output::Report;
 

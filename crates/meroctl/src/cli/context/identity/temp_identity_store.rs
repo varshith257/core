@@ -1,8 +1,8 @@
-use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use std::sync::Mutex;
 
 use calimero_primitives::identity::{PrivateKey, PublicKey};
+use once_cell::sync::Lazy;
 
 #[derive(Debug, Clone)]
 pub struct IdentityPair {

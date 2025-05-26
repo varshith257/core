@@ -59,7 +59,9 @@ impl JoinCommand {
         let private_key = match self.private_key {
             Some(key) => key,
             None => {
-                let pubkey = self.invitation_payload.invitee();
+                let (_, pubkey, _, _, _) = self.invitation_payload.parts().map_err(|_| {
+                    eyre::eyre!("Invalid invitation payload: cannot extract invitee")
+                })?;
                 get_identity_by_public(pubkey)
                     .ok_or_eyre("Private key not found in temporary store. Please pass --private-key or generate one using `context identity generate`.")?
             }

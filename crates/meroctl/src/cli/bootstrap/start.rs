@@ -115,7 +115,7 @@ impl StartBootstrapCommand {
         self.invite_and_join_node(
             context_id,
             public_key,
-            invitee_private_key,
+            Some(invitee_private_key),
             &node1_environment,
             &node2_environment,
         )

@@ -17,7 +17,7 @@ use crate::output::ErrorLine;
 
 mod alias;
 mod generate;
-mod temp_identity_store;
+pub mod temp_identity_store;
 
 #[derive(Debug, Parser)]
 #[command(about = "Manage context identities")]

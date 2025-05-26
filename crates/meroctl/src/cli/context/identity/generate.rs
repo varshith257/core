@@ -4,6 +4,7 @@ use clap::Parser;
 use comfy_table::{Cell, Color, Table};
 use eyre::Result as EyreResult;
 
+use super::temp_identity_store::{store_identity, IdentityPair};
 use crate::cli::Environment;
 use crate::output::Report;
 
@@ -24,6 +25,19 @@ impl Report for GenerateContextIdentityResponse {
 impl GenerateCommand {
     pub async fn run(self, environment: &Environment) -> EyreResult<()> {
         let private_key = PrivateKey::random(&mut rand::thread_rng());
+        let public_key = private_key.public_key();
+
+        let identity = IdentityPair {
+            public: public_key.clone(),
+            private: private_key.clone(),
+        };
+
+        for slot in 0u8..32 {
+            if store_identity(slot, identity.clone()) {
+                break;
+            }
+        }
+
         let response = GenerateContextIdentityResponse::new(private_key.public_key(), private_key);
         environment.output.write(&response);
 

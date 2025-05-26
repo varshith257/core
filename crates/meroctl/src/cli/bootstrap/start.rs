@@ -115,7 +115,7 @@ impl StartBootstrapCommand {
         self.invite_and_join_node(
             context_id,
             public_key,
-            Some(invitee_private_key),
+            invitee_private_key,
             &node1_environment,
             &node2_environment,
         )
@@ -214,7 +214,7 @@ impl StartBootstrapCommand {
         );
 
         let join_command = JoinCommand {
-            private_key: invitee_private_key,
+            private_key: Some(invitee_private_key),
             invitation_payload,
             context: None,
             identity: None,

@@ -4,7 +4,7 @@ use calimero_primitives::identity::{PrivateKey, PublicKey};
 use calimero_server_primitives::admin::{JoinContextRequest, JoinContextResponse};
 use clap::Parser;
 use comfy_table::{Cell, Color, Table};
-use eyre::Result as EyreResult;
+use eyre::{eyre, OptionExt, Result as EyreResult};
 use reqwest::Client;
 
 use crate::cli::context::identity::temp_identity_store::get_identity_by_public;
@@ -62,7 +62,7 @@ impl JoinCommand {
                 let (_, pubkey, _, _, _) = self.invitation_payload.parts().map_err(|_| {
                     eyre::eyre!("Invalid invitation payload: cannot extract invitee")
                 })?;
-                get_identity_by_public(pubkey)
+                get_identity_by_public(&pubkey)
                     .ok_or_eyre("Private key not found in temporary store. Please pass --private-key or generate one using `context identity generate`.")?
             }
         };

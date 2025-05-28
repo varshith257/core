@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["app_installed","create_context","install_app","update_context_application","watch_app_and_update_context"],"struct":["CreateCommand"]};

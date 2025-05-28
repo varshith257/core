@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ContextIdentityAliasSubcommand"],"fn":["identity_exists_in_context"],"struct":["ContextIdentityAliasCommand"]};

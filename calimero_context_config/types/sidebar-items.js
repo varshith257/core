@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Capability","ConfigError","VerificationKeyParseError"],"struct":["Application","ApplicationId","ApplicationMetadata","ApplicationSource","BlobId","ContextId","ContextIdentity","ContextStorageEntry","Identity","ProposalId","Signed","SignerId"],"trait":["IntoResult"],"type":["Revision"]};

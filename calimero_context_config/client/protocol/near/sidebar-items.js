@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ErrorOperation","Near","NearError","SecretKey"],"struct":["AccountId","Credentials","NearConfig","NearTransport","NetworkConfig"]};

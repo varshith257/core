@@ -1,0 +1,195 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Entities for the storage system."><title>calimero_storage::entities - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="calimero_storage" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.0 (4d91de4e4 2025-02-17)" data-channel="1.85.0" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../static.files/storage-59e33391.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../calimero_storage/index.html">calimero_<wbr>storage</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module entities</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#design-elements-data-and-atomic-units" title="Design: Elements, data, and atomic units">Design: Elements, data, and atomic units</a><ul><li><a href="#considerations" title="Considerations">Considerations</a></li><li><a href="#option-one" title="Option One">Option One</a></li><li><a href="#option-two" title="Option Two">Option Two</a></li><li><a href="#option-three" title="Option Three">Option Three</a></li><li><a href="#option-four" title="Option Four">Option Four</a></li><li><a href="#option-five" title="Option Five">Option Five</a></li><li><a href="#conclusion" title="Conclusion">Conclusion</a></li></ul></li><li><a href="#design-collections" title="Design: Collections">Design: Collections</a></li></ul><h3><a href="#structs">Module Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#traits" title="Traits">Traits</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="../index.html">In crate calimero_<wbr>storage</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../index.html">calimero_storage</a></span><h1>Module <span>entities</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/calimero_storage/entities.rs.html#1-823">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Entities for the storage system.</p>
+<p>This module contains the entities that are used to represent the elements in
+the storage system. These are the building blocks that are used to construct
+the hierarchy of the storage, and to apply updates to the elements.</p>
+<h2 id="design-elements-data-and-atomic-units"><a class="doc-anchor" href="#design-elements-data-and-atomic-units">§</a>Design: Elements, data, and atomic units</h2>
+<p>There are a number of requirements that need to be catered for by the
+solution, and it is worth exploring some of the possible structures and
+approaches that have been considered.</p>
+<h3 id="considerations"><a class="doc-anchor" href="#considerations">§</a>Considerations</h3>
+<p>Let’s examine first principles:</p>
+<ol>
+<li><code>Element</code>s are saved, and <code>Element</code>s are structs, with system metadata.</li>
+<li><code>Element</code>s also contain user data, represented by <code>Data</code>.</li>
+<li>User types need to have an easy interface, using an <code>AtomicUnit</code>
+annotation.</li>
+</ol>
+<p>It is possible that <code>Element</code> should be a trait, and that the <code>AtomicUnit</code>
+trait should be a superset of <code>Element</code>, and that the <code>AtomicUnit</code> proc
+macro would then apply both <code>Element</code> and <code>AtomicUnit</code>. However, this would
+still need a <code>Data</code> struct to be constructed, owned by the <code>Element</code>.</p>
+<p>Therefore, if we say that <code>Element</code> remains a struct, for simplicity, then
+what exactly is being annotated? If the user creates a <code>Person</code>, is that
+<code>Person</code> an <code>Element</code> or an <code>AtomicUnit</code>?</p>
+<p>It seems that the <code>Person</code> must be an <code>AtomicUnit</code>, which means it cannot
+<em>be</em> <code>Data</code> with this structure, as it would need to <em>contain</em> <code>Data</code>. Now,
+it initially seemed that <code>AtomicUnit</code> should extend <code>Data</code>. But if
+<code>AtomicUnit</code> is the <code>Data</code>, then the <code>Person</code> annotation would be misleading
+if it was applying to the internal <code>Data</code> and not to the <code>Person</code>. This
+would not be idiomatic nor a good pattern to follow.</p>
+<p>So… if the <code>Person</code> is in fact the <code>AtomicUnit</code>, and it has data fields,
+where do we get <code>Data</code> from now? We can’t really have <code>Data</code> being an
+<code>Element</code>, so <code>Data</code> has to be owned by <code>Element</code>, and where does the
+<code>Element</code> come from?</p>
+<p>The relationship between these entities is critical to get right. As much as
+possible of the internals should be abstracted away from the user, with the
+presented interface being as simple as possible.</p>
+<h3 id="option-one"><a class="doc-anchor" href="#option-one">§</a>Option One</h3>
+<ul>
+<li><code>Person</code> is an <code>AtomicUnit</code>.</li>
+<li><code>Person</code> defines fields — some marked as private.</li>
+<li>To satisfy <code>AtomicUnit</code>, <code>Person</code> has a <code>storage</code> field added.</li>
+<li><code>Person.storage</code> is an <code>Element</code>, and contains a <code>PersonData</code> struct.</li>
+<li><code>PersonData</code> is constructed by the macro, and contains a copy of the
+fields from <code>Person</code> that are not private. These fields could
+potentially be borrowed, referencing the fields on the <code>Element</code>.</li>
+<li>It’s then unclear if <code>Person</code> (i.e. <code>AtomicUnit</code>) needs a <code>save()</code>
+method, or whether it should be passed to <code>Interface</code>.</li>
+</ul>
+<p>This suffers from a number of issues, including:</p>
+<ul>
+<li>The <code>Person</code> is now a leaky abstraction, as it exposes the internals of
+the <code>Element</code> and <code>PersonData</code>.</li>
+<li>The <code>Person</code> is now a pain to work with, as it has to be constructed in
+a specific way, including the construction of <code>PersonData</code>.</li>
+<li>The very existence of <code>PersonData</code> is icky.</li>
+</ul>
+<h3 id="option-two"><a class="doc-anchor" href="#option-two">§</a>Option Two</h3>
+<ul>
+<li><code>Person</code> is an <code>AtomicUnit</code>.</li>
+<li><code>Person</code> defines fields — some marked as private.</li>
+<li><code>Element</code> becomes a trait instead of a struct.</li>
+<li><code>AtomicUnit</code> demands <code>Element</code>.</li>
+<li><code>Person</code> is now therefore an <code>Element</code>.</li>
+<li><code>Person.data</code> contains a <code>PersonData</code> struct.</li>
+<li><code>PersonData</code> is constructed by the macro, and contains a copy of the
+fields from <code>Person</code> that are not private. Again, these fields could
+potentially be borrowed, referencing the fields on the <code>Element</code>.</li>
+<li><code>Person</code> does not appear to need a <code>save()</code> now, as <code>Interface.save()</code>
+accepts <code>Element</code>, and therefore <code>Person</code>.</li>
+</ul>
+<p>This is also problematic:</p>
+<ul>
+<li>The <code>Element</code> has a lot on it, which clutters up the <code>Person</code>.</li>
+<li>It exposes the internals, which is undesirable.</li>
+</ul>
+<h3 id="option-three"><a class="doc-anchor" href="#option-three">§</a>Option Three</h3>
+<ul>
+<li><code>Person</code> is an <code>AtomicUnit</code>.</li>
+<li><code>Person</code> defines fields — some marked as private.</li>
+<li><code>Element</code> remains a struct.</li>
+<li><code>Interface</code> accepts <code>Data</code> not <code>Element</code>.</li>
+<li><code>AtomicUnit</code> extends <code>Data</code>.</li>
+<li><code>Person</code> is therefore <code>Data</code>.</li>
+<li><code>Person</code> has a <code>storage</code> field added, to hold an <code>Element</code>.</li>
+<li>A circular reference is carefully created between <code>Person</code> and
+<code>Element</code>, with <code>Element</code> holding a weak reference to <code>Person</code>, and
+<code>Person</code> having a strong reference to (or ownership of) <code>Element</code>.</li>
+<li>When accepting <code>Data</code>, i.e. a <code>Person</code> here, the <code>Interface</code> can call
+through <code>Person.storage</code> to get to the <code>Element</code>, and the <code>Element</code> can
+access the <code>Data</code> through the <a href="https://doc.rust-lang.org/1.85.0/alloc/sync/struct.Weak.html" title="struct alloc::sync::Weak"><code>Weak</code></a>.</li>
+<li>The macro does not need to create another struct, and the saving logic
+can skip the fields marked as private.</li>
+<li><code>Person</code> does not appear to need a <code>save()</code>, as <code>Interface.save()</code> does
+not need to be changed.</li>
+</ul>
+<p>The disadvantages of this approach are:</p>
+<ul>
+<li>The circular reference is a bit of a pain, and could be a source of
+bugs.</li>
+<li>In order to achieve the circular reference, the <code>Element</code> would need to
+wrap the <code>Data</code> in a <a href="https://doc.rust-lang.org/1.85.0/alloc/sync/struct.Weak.html" title="struct alloc::sync::Weak"><code>Weak</code></a>, which means that all use
+of the <code>Data</code> would need to be through the reference-counted pointer,
+which implies wrapping <code>Data</code> in an <a href="https://doc.rust-lang.org/1.85.0/alloc/sync/struct.Arc.html" title="struct alloc::sync::Arc"><code>Arc</code></a> upon
+construction.</li>
+<li>In order to gain mutability, some kind of mutex or read-write lock would
+be required. Imposing a predetermined mutex type would be undesirable,
+as the user may have their own requirements. It’s also an annoying
+imposition.</li>
+<li>Due to the <code>Data</code> (i.e. <code>Person</code>) being wrapped in an <a href="https://doc.rust-lang.org/1.85.0/alloc/sync/struct.Arc.html" title="struct alloc::sync::Arc"><code>Arc</code></a>,
+<a href="https://doc.rust-lang.org/1.85.0/core/default/trait.Default.html" title="trait core::default::Default"><code>Default</code></a> cannot be implemented.</li>
+</ul>
+<h3 id="option-four"><a class="doc-anchor" href="#option-four">§</a>Option Four</h3>
+<ul>
+<li><code>Person</code> is an <code>AtomicUnit</code>.</li>
+<li><code>Person</code> defines fields — some marked as private.</li>
+<li><code>Element</code> remains a struct.</li>
+<li><code>Interface</code> accepts <code>Data</code> not <code>Element</code>.</li>
+<li><code>AtomicUnit</code> extends <code>Data</code>.</li>
+<li><code>Person</code> is therefore <code>Data</code>.</li>
+<li><code>Person</code> has a <code>storage</code> field added, to hold (and own) an <code>Element</code>.</li>
+<li>When accepting <code>Data</code>, i.e. a <code>Person</code> here, the <code>Interface</code> can call
+through <code>Person.storage</code> to get to the <code>Element</code>.</li>
+<li>The macro does not need to create another struct, and the saving logic
+can skip the fields marked as private.</li>
+<li><code>Person</code> does not appear to need a <code>save()</code>, as <code>Interface.save()</code> does
+not need to be changed.</li>
+</ul>
+<p>This is essentially the same as Option Three, but without the circular
+reference. The disadvantages are:</p>
+<ul>
+<li>There is no way for the <code>Element</code> to access the <code>Data</code> directly. This
+forces a different approach to those operations that require <code>Data</code>.</li>
+<li>The <code>Element</code>’s operations can accept a <code>Data</code> instead of looking it up
+directly, but this loses structural assurance of the relationship.</li>
+</ul>
+<p>Passing the <code>Data</code> to the <code>Element</code>’s operations does work around the first
+issue, albeit in a slightly unwieldy way. The second issue can be mitigated
+by performing a check that the <code>Element</code> owned by the passed-in <code>Data</code> is
+the same instance as the <code>Element</code> that the operation is being called on.
+Although this is a runtime logic check, it is a simple one, and can be
+entirely contained within the internal logic, which remains unexposed.</p>
+<h3 id="option-five"><a class="doc-anchor" href="#option-five">§</a>Option Five</h3>
+<p>For the sake of completeness, it’s worth noting that technically another
+option would be to use generics, such as <code>Element&lt;D: Data&gt;</code>, but this leads
+to unnecessary complexity at this stage (including the potential to have to
+use phantom data), with no tangible benefits. Therefore this has not been
+discussed in detail here, although it has been carefully considered.</p>
+<h3 id="conclusion"><a class="doc-anchor" href="#conclusion">§</a>Conclusion</h3>
+<p>Option Four is the approach chosen, as it balances all of the following
+aspirations:</p>
+<ul>
+<li>Simple to use.</li>
+<li>Allows full ownership and mutability of the user’s types.</li>
+<li>Abstracts all storage functionality to the storage internals.</li>
+<li>Achieves reliability.</li>
+<li>Allows implementation of <a href="https://doc.rust-lang.org/1.85.0/core/default/trait.Default.html" title="trait core::default::Default"><code>Default</code></a> and similar without unexpected
+constraints.</li>
+<li>Does not clutter the user’s types.</li>
+<li>Does not expose the internals of the storage system.</li>
+<li>Does not require a circular reference.</li>
+<li>Does not impose a mutex type.</li>
+<li>Does not force a predetermined mutex type.</li>
+<li>Does not require a separate struct to be constructed.</li>
+<li>Does not require references to, or clones of, saved data.</li>
+</ul>
+<p>Not having a reference back to the <code>Data</code> from the <code>Element</code> is a slight
+trade-off, but it is a small one, sacrificing a little structural assurance
+and direct access for a simpler design with fewer impositions. The internal
+validation check is simple, and it is best to promote the elegance of the
+user interface over that of the internals — if there are a couple of hoops
+to jump through then it is best for these to be in the library code.</p>
+<h2 id="design-collections"><a class="doc-anchor" href="#design-collections">§</a>Design: Collections</h2>
+<p>There are three main ways to implement the collection functionality, i.e.
+where a parent <a href="struct.Element.html" title="struct calimero_storage::entities::Element"><code>Element</code></a> has children. These are:</p>
+<ol>
+<li>
+<p><strong>Struct-based</strong>: Annotate the struct as being a <code>Collection</code>, meaning
+it can then have children. In this situation the child type is supplied
+as an associated type. This is the most straightforward approach, but
+it does not allow for the parent to have multiple types of children.</p>
+</li>
+<li>
+<p><strong>Enum-based</strong>: E.g. <code>enum ChildType { Page(Page), Author(Author) }</code>.
+This is more flexible, but it requires a match to determine the child
+type, and although the type formality is good in some ways, it adds
+a level of complexity and maintenance that is not desirable.</p>
+</li>
+<li>
+<p><strong>Field-based</strong>: E.g. <code>entity.pages</code> and <code>entity.authors</code> annotated as
+<code>Collection</code>, with some way to look up which fields are needed. This is
+the most flexible, and the easiest developer interface to use.</p>
+</li>
+</ol>
+<p>The approach taken is Option 3, for the reasons given above.</p>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.ChildInfo.html" title="struct calimero_storage::entities::ChildInfo">Child<wbr>Info</a></div><div class="desc docblock-short">Summary information for the child of an <a href="struct.Element.html" title="struct calimero_storage::entities::Element"><code>Element</code></a> in the storage.</div></li><li><div class="item-name"><a class="struct" href="struct.Element.html" title="struct calimero_storage::entities::Element">Element</a></div><div class="desc docblock-short">Represents an <a href="struct.Element.html" title="struct calimero_storage::entities::Element"><code>Element</code></a> in the storage.</div></li><li><div class="item-name"><a class="struct" href="struct.Metadata.html" title="struct calimero_storage::entities::Metadata">Metadata</a></div><div class="desc docblock-short">The metadata for an <a href="struct.Element.html" title="struct calimero_storage::entities::Element"><code>Element</code></a>.</div></li><li><div class="item-name"><a class="struct" href="struct.UpdatedAt.html" title="struct calimero_storage::entities::UpdatedAt">Updated<wbr>At</a></div><div class="desc docblock-short">The timestamp when the <a href="struct.Element.html" title="struct calimero_storage::entities::Element"><code>Element</code></a> was last updated.</div></li></ul><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="trait" href="trait.AtomicUnit.html" title="trait calimero_storage::entities::AtomicUnit">Atomic<wbr>Unit</a></div><div class="desc docblock-short">Represents an atomic unit in the storage system.</div></li><li><div class="item-name"><a class="trait" href="trait.Collection.html" title="trait calimero_storage::entities::Collection">Collection</a></div><div class="desc docblock-short">A collection of child elements in the storage system.</div></li><li><div class="item-name"><a class="trait" href="trait.Data.html" title="trait calimero_storage::entities::Data">Data</a></div><div class="desc docblock-short">The primary data for the <a href="struct.Element.html" title="struct calimero_storage::entities::Element"><code>Element</code></a>.</div></li></ul></section></div></main></body></html>

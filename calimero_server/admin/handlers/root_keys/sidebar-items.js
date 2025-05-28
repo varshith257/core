@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["create_root_key_handler","delete_auth_keys_handler","store_root","store_root_key"],"struct":["DeleteKeysResponse"]};

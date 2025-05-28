@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ActionType"],"fn":["get_context_storage_entries_handler","get_context_value_handler","get_number_of_active_proposals_handler","get_number_of_proposal_approvals_handler","get_proposal_approvers_handler","get_proposal_handler","get_proposals_handler","get_proxy_contract_handler"]};

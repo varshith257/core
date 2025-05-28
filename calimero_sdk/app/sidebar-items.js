@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"attr":["destroy","event","init","logic","state"],"macro":["bail","emit","err","log"],"type":["Result"]};

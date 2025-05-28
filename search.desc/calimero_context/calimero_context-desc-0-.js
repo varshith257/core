@@ -1,0 +1,1 @@
+searchState.loadedDescShard("calimero_context", 0, "Returns the argument unchanged.\nCalls <code>U::from(self)</code>.\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.\nThe self-referencing struct.\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.")

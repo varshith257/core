@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["SyncArtifact"],"fn":["commit_root","push_action","push_comparison"]};

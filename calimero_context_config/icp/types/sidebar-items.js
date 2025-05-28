@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ICCapability","ICContextRequestKind","ICRequestKind","ICSignedError"],"struct":["ICApplication","ICContextRequest","ICRequest","ICSigned"]};

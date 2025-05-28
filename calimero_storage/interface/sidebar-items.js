@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Action","StorageError"],"struct":["ComparisonData","Interface"],"type":["MainInterface"]};

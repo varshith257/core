@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["NoEvent"],"fn":["downcast","emit","register"],"struct":["EncodedAppEvent"],"trait":["AppEvent","AppEventExt"]};

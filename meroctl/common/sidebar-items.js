@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["RequestType","ResolveResponseValue"],"fn":["create_alias","delete_alias","do_request","fetch_multiaddr","load_config","lookup_alias","make_request","multiaddr_to_url","resolve_alias"],"struct":["ResolveResponse"],"trait":["UrlFragment"]};

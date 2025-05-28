@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Derives the `AtomicUnit` trait for a struct."><title>AtomicUnit in calimero_storage_macros - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="calimero_storage_macros" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.0 (4d91de4e4 2025-02-17)" data-channel="1.85.0" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../static.files/storage-59e33391.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc derive"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../calimero_storage_macros/index.html">calimero_<wbr>storage_<wbr>macros</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Atomic<wbr>Unit</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#requirements" title="Requirements">Requirements</a></li><li><a href="#generated-implementations" title="Generated implementations">Generated implementations</a></li><li><a href="#struct-attributes" title="Struct attributes">Struct attributes</a></li><li><a href="#field-attributes" title="Field attributes">Field attributes</a></li><li><a href="#getters-and-setters" title="Getters and setters">Getters and setters</a></li><li><a href="#examples" title="Examples">Examples</a></li><li><a href="#panics" title="Panics">Panics</a></li><li><a href="#see-also" title="See also">See also</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate calimero_<wbr>storage_<wbr>macros</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="index.html">calimero_storage_macros</a></span><h1>Derive Macro <span class="derive">AtomicUnit</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/calimero_storage_macros/lib.rs.html#160-238">Source</a> </span></div><pre class="rust item-decl"><code>#[derive(AtomicUnit)]
+{
+    <span class="comment">// Attributes available to this derive:</span>
+    #[children]
+    #[collection]
+    #[private]
+    #[root]
+    #[skip]
+    #[storage]
+    #[type_id]
+}
+</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Derives the <a href="calimero_storage::entities::AtomicUnit"><code>AtomicUnit</code></a> trait for
+a struct.</p>
+<p>This macro automatically implements the <a href="calimero_storage::entities::AtomicUnit"><code>AtomicUnit</code></a>
+trait for a struct, which extends the <a href="calimero_storage::entities::Data"><code>Data</code></a>
+trait.</p>
+<h2 id="requirements"><a class="doc-anchor" href="#requirements">§</a>Requirements</h2>
+<p>The following are mandatory requirements for the struct:</p>
+<ul>
+<li>A private <code>storage</code> field of type <a href="calimero_storage::entities::Element"><code>Element</code></a>.
+This is needed as the <a href="calimero_storage::entities::Data"><code>Data</code></a>-based
+struct needs to own an <a href="calimero_storage::entities::Element"><code>Element</code></a>.</li>
+</ul>
+<h2 id="generated-implementations"><a class="doc-anchor" href="#generated-implementations">§</a>Generated implementations</h2>
+<p>This macro will generate the following implementations:</p>
+<ul>
+<li><a href="calimero_storage::entities::Data"><code>Data</code></a> trait implementation.</li>
+<li><a href="calimero_storage::entities::AtomicUnit"><code>AtomicUnit</code></a> trait
+implementation.</li>
+<li>Getter and setter methods for each field. These help to ensure that the
+access to the fields is controlled, and that any changes to the fields
+are reflected in the <a href="calimero_storage::entities::Element"><code>Element</code></a>’s
+state.</li>
+<li><a href="borsh::BorshSerialize"><code>BorshSerialize</code></a> and <a href="borsh::BorshDeserialize"><code>BorshDeserialize</code></a>
+will be implemented for the struct, so they should be omitted from the
+struct definition.</li>
+</ul>
+<h2 id="struct-attributes"><a class="doc-anchor" href="#struct-attributes">§</a>Struct attributes</h2>
+<ul>
+<li><code>#[root]</code>       - Indicates that the type represents a root in the
+hierarchy, and doesn’t have a parent. This is an
+optional attribute.</li>
+<li><code>#[type_id(n)]</code> - Indicates the type ID for the struct. This is a
+mandatory attribute, and the value <code>n</code> must be a <code>u8</code>.
+This is used to differentiate between different types
+of structs when deserialising, and each type should have
+a unique ID.</li>
+</ul>
+<h2 id="field-attributes"><a class="doc-anchor" href="#field-attributes">§</a>Field attributes</h2>
+<ul>
+<li><code>#[collection]</code> - Indicates that the field is a collection of other
+<a href="https://docs.rs/syn/2.0.101/syn/derive/enum.Data.html" title="enum syn::derive::Data"><code>Data</code></a> types.</li>
+<li><code>#[private]</code>    - Designates fields that are local-only, and so should not
+be shared with other nodes in the network. These fields
+will not be serialised or included in the Merkle hash
+calculation. Note that being local-only is not the same
+as applying permissions via ACLs to share with only the
+current user — these fields are not shared at all.</li>
+<li><code>#[skip]</code>       - Can be applied to fields that should not be serialised
+or included in the Merkle hash calculation. These fields
+will be completely ignored by the storage system, and
+not even have getters and setters implemented.</li>
+<li><code>#[storage]</code>    - Indicates that the field is the storage element for the
+struct. This is a mandatory field, and if it is missing,
+there will be a panic during compilation. The name is
+arbitrary, but the type has to be an <a href="calimero_storage::entities::Element"><code>Element</code></a>.</li>
+</ul>
+<p>Note that fields marked with <code>#[private]</code> or <code>#[skip]</code> must have <a href="https://doc.rust-lang.org/1.85.0/core/default/trait.Default.html" title="trait core::default::Default"><code>Default</code></a>
+implemented so that they can be initialised when deserialising.</p>
+<p>TODO: The <code>#[private]</code> attribute is implemented with the same functionality
+as <code>#[skip]</code>, but in future these will be differentiated.</p>
+<h2 id="getters-and-setters"><a class="doc-anchor" href="#getters-and-setters">§</a>Getters and setters</h2>
+<p>The macro will generate getter and setter methods for each field. These
+methods will allow the struct to control access to its fields, and ensure
+that any changes to the fields are reflected in the <a href="calimero_storage::entities::Element"><code>Element</code></a>’s
+state.</p>
+<p>The getter methods will have the same name as the field, and the setter
+methods will be prefixed with <code>set_</code>. For example, given a field <code>name</code>, the
+getter method will be <code>name()</code>, and the setter method will be <code>set_name()</code>.</p>
+<p>The setter methods will return a boolean indicating whether the update was
+carried out. Note that this is more an indication of change than it is of
+error — if the value is the same as the current value, the update will not
+be carried out, and the method will return <code>false</code>.</p>
+<h2 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>calimero_storage::entities::Element;
+<span class="kw">use </span>calimero_storage_macros::AtomicUnit;
+<span class="kw">use </span>borsh::{BorshSerialize, BorshDeserialize};
+
+<span class="attr">#[derive(AtomicUnit, Clone, Debug, Eq, PartialEq, PartialOrd, BorshSerialize, BorshDeserialize)]
+#[type_id(<span class="number">43</span>)]
+</span><span class="kw">struct </span>Page {
+    title: String,
+    <span class="attr">#[private]
+    </span>secret: String,
+    <span class="attr">#[storage]
+    </span>storage: Element,
+}</code></pre></div>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>calimero_storage::entities::Element;
+<span class="kw">use </span>calimero_storage_macros::{AtomicUnit, Collection};
+<span class="kw">use </span>borsh::{BorshSerialize, BorshDeserialize};
+
+<span class="attr">#[derive(AtomicUnit, Clone, Debug, Eq, PartialEq, PartialOrd, BorshSerialize, BorshDeserialize)]
+#[type_id(<span class="number">44</span>)]
+</span><span class="kw">struct </span>Person {
+    name: String,
+    age: u32,
+    <span class="attr">#[private]
+    </span>secret: String,
+    <span class="attr">#[collection]
+    </span>friends: Friends,
+    <span class="attr">#[storage]
+    </span>storage: Element,
+}
+
+<span class="attr">#[derive(Collection, Clone, Debug, Eq, PartialEq, PartialOrd)]
+#[children(Person)]
+</span><span class="kw">struct </span>Friends;</code></pre></div>
+<h2 id="panics"><a class="doc-anchor" href="#panics">§</a>Panics</h2>
+<p>This macro will panic during compilation if:</p>
+<ul>
+<li>It is applied to anything other than a struct</li>
+<li>The struct has unnamed fields</li>
+<li>The struct does not have a field annotated as <code>#[storage]</code></li>
+<li>The struct has fields with types that do not implement <a href="https://doc.rust-lang.org/1.85.0/core/default/trait.Default.html" title="trait core::default::Default"><code>Default</code></a></li>
+<li>The struct already has methods with the same names as the generated
+getter and setter methods</li>
+</ul>
+<h2 id="see-also"><a class="doc-anchor" href="#see-also">§</a>See also</h2>
+<ul>
+<li><a href="derive.Collection.html" title="derive calimero_storage_macros::Collection"><code>Collection</code></a> - For defining a collection of child elements, for use with
+<a href="derive.AtomicUnit.html" title="derive calimero_storage_macros::AtomicUnit"><code>AtomicUnit</code></a> (the parent and children are all atomic
+units, with the collection being the grouping mechanism
+at field level on the parent).</li>
+</ul>
+</div></details></section></div></main></body></html>

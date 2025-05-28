@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Format"],"struct":["ErrorLine","InfoLine","Output","WarnLine"],"trait":["Report"]};

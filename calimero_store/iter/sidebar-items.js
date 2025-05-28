@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["IterError","Unstructured"],"struct":["Iter","IterEntries","IterKeys","IterPair","Structured"],"trait":["DBIter","TryIntoKey","TryIntoValue"]};

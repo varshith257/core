@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["get_peers_count_handler"]};

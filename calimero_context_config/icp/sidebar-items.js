@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ICProposalAction","ICProxyMutateRequest"],"mod":["repr","types"],"struct":["ICProposal","ICProposalApprovalWithSigner","ICProposalWithApprovals"]};

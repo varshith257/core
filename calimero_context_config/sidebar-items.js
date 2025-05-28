@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ContextRequestKind","ProposalAction","ProxyMutateRequest","RequestKind","SystemRequest"],"mod":["client","icp","repr","stellar","types"],"struct":["ContextRequest","Proposal","ProposalApprovalWithSigner","ProposalWithApprovals","Request"],"type":["Gas","NativeToken","Timestamp"]};

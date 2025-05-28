@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["EitherError","Operation"],"struct":["Both","TransportArguments","TransportRequest","UnsupportedProtocol"],"trait":["AssociatedTransport","ProtocolTransport","Transport"]};

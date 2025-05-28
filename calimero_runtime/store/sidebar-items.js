@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["InMemoryStorage"],"trait":["Storage"],"type":["Key","Value"]};

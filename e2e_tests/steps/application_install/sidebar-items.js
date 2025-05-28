@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ApplicationInstallTarget","ApplicationSource"],"struct":["ApplicationInstallStep"]};

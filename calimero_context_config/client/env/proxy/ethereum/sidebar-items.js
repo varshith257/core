@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["SolCapability","SolContextRequestKind","SolProposalActionKind","SolRequestKind"],"struct":["ContextValueData","ExternalFunctionCallData","SolContextRequest","SolProposal","SolProposalAction","SolProposalApprovalWithSigner","SolProposalWithApprovals","SolRequest","SolSignedRequest","TransferData"]};

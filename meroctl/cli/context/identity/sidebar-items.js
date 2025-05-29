@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ContextIdentitySubcommand"],"fn":["list_identities"],"mod":["alias","generate"],"struct":["ContextIdentityCommand"]};

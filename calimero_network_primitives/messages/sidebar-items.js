@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["NetworkEvent","NetworkMessage"],"struct":["Bootstrap","Dial","ListenOn","MeshPeerCount","MeshPeers","Message","MessageId","OpenStream","PeerCount","PeerId","Publish","Subscribe","TopicHash","Unsubscribe"],"type":["IdentTopic"]};

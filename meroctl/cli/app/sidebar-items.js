@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["EXAMPLES"],"enum":["AppSubCommands"],"mod":["get","install","list"],"struct":["AppCommand"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["CALIMERO_DEV_BOOT_NODES","DEFAULT_PORT","IPFS_BOOT_NODES"],"struct":["AutonatConfig","BootstrapConfig","BootstrapNodes","DiscoveryConfig","NetworkConfig","RelayConfig","RendezvousConfig","SwarmConfig"]};

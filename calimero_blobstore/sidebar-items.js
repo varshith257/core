@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["CHUNK_SIZE"],"enum":["BlobError","Size"],"mod":["config"],"struct":["Blob","BlobManager","FileSystem"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["BlockId"],"type":["AccountId","Balance","BlockHash","BlockHeight","Nonce","ShardId","StorageUsage"]};

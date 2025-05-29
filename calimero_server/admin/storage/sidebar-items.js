@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["client_keys","did","jwt_secret","jwt_token","root_key","ssl"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["construct_node_challenge","decode_signature","eth_message","is_older_than_15_minutes","serialize_node_challenge","validate_challenge","validate_challenge_content","validate_root_key_exists","verify_eth_signature","verify_near_public_key","verify_node_signature","verify_signature"]};

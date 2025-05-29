@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Command","RequestPayload","ResponseBody","ResponseBodyError","ServerResponseError"],"struct":["Request","Response","SubscribeRequest","SubscribeResponse","UnsubscribeRequest","UnsubscribeResponse"],"type":["ConnectionId","RequestId"]};

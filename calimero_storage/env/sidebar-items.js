@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["commit","context_id","random_bytes","storage_read","storage_remove","storage_write","time_now"]};

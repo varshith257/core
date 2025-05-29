@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ErrorOperation","Ethereum","EthereumError"],"struct":["Credentials","EthereumConfig","EthereumTransport","NetworkConfig"]};

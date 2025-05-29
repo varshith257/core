@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["AccessKeyPermissionView","BlockReference","Finality","QueryRequest","SyncCheckpoint"],"struct":["AccessKeyInfoView","AccessKeyList","AccessKeyView","AccountView","CallResult","ContractCodeView","FunctionArgs","StateItem","StoreKey","StoreValue","ViewStateResult"]};

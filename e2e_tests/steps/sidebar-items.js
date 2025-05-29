@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["TestStep"],"mod":["application_install","context_create","context_create_alias","context_invite_join","get_proposals","jsonrpc_call","verify_external_state","wait"],"struct":["TestScenario"]};

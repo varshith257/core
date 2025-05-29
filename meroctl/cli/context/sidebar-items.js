@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["EXAMPLES"],"enum":["ContextSubCommands"],"mod":["alias","create","delete","get","identity","invite","join","list","update","watch"],"struct":["ContextCommand"]};

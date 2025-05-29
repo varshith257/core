@@ -1,1 +1,0 @@
-searchState.loadedDescShard("calimero_storage_macros", 0, "Derives the <code>AtomicUnit</code> trait for a struct.\nDerives the <code>Collection</code> trait for a struct.")

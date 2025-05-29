@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ErrorOperation","Stellar","StellarError"],"struct":["Credentials","NetworkConfig","StellarConfig","StellarTransport"]};

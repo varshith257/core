@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["get_ssl","insert_or_update_ssl"],"struct":["SSLCert"]};

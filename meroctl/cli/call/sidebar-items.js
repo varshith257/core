@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["EXAMPLES"],"fn":["serde_value"],"struct":["CallCommand"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["CALIMERO_STREAM_PROTOCOL","MAX_MESSAGE_SIZE"],"enum":["CodecError"],"struct":["Message","Stream"]};

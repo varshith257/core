@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ProposalAction"],"macro":["__bail__"],"mod":["app","env","event","state","types"],"struct":["AccountId","DraftProposal","External","ProposalId"]};

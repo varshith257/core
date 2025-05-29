@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["add_client_key_handler","generate_jwt_token_handler","refresh_jwt_token_handler","store_client_key","transform_request"]};

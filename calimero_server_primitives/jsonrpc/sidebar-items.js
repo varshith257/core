@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ExecutionError","RequestId","RequestPayload","ResponseBody","ResponseBodyError","ServerResponseError","Version"],"struct":["ExecutionRequest","ExecutionResponse","Request","Response","ResponseBodyResult"]};

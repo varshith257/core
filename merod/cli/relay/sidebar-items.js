@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["DEFAULT_ADDR","DEFAULT_PORT"],"fn":["addr_from_str","handler"],"struct":["RelayCommand"],"type":["AppState","HandlerSender","RequestPayload"]};

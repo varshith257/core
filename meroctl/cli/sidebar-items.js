@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["EXAMPLES"],"enum":["CliError","SubCommands"],"fn":["serialize_eyre_report"],"mod":["app","bootstrap","call","context","peers","proxy"],"struct":["ApiError","Environment","RootArgs","RootCommand"]};

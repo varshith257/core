@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["ChildInfo","Element","Metadata","UpdatedAt"],"trait":["AtomicUnit","Collection","Data"]};

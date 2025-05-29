@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["DEFAULT_CALIMERO_HOME"],"fn":["default_node_dir"]};

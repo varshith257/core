@@ -1,1 +1,0 @@
-searchState.loadedDescShard("calimero_sdk", 0, "Contains the error value\nContains the success value\nFill the buffer with random bytes.\nGets the current time.\nReturns the argument unchanged.\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.\nCalls <code>U::from(self)</code>.\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.")

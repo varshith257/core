@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["GetRequest"],"fn":["serde_value"],"struct":["GetCommand"]};

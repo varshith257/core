@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ReprError"],"struct":["LengthMismatch","Repr"],"trait":["DynSizedByteSlice","ReprBytes","ReprTransmute"],"type":["Result"]};

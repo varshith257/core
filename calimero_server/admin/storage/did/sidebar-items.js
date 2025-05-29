@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["create_did","delete_did","get_or_create_did","update_did"]};

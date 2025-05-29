@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["DynErased","Lazy","LazyInner"],"trait":["IntoEnvelope","IntoRef","Receiver","Sender"],"type":["LazyAddr","LazyRecipient"]};

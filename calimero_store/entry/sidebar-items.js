@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Borsh","Identity","Json"],"trait":["Codec","Entry"]};

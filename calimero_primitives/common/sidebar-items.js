@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ResultAlt"],"fn":["bool_true","multiaddr_to_url"]};

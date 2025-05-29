@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["DEFAULT_CALIMERO_HOME","DEFAULT_RELAYER_URL"],"fn":["default_node_dir","default_relayer_url"]};

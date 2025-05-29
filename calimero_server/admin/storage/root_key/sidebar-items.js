@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["add_root_key","clean_auth_keys","exists_root_keys","get_root_key","get_root_keys","has_near_account_root_key"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ErrorOperation","Starknet","StarknetError"],"struct":["Credentials","NetworkConfig","StarknetConfig","StarknetTransport"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["VMLogicError"],"struct":["Event","Outcome","VMContext","VMHostFunctions","VMLimits","VMLogic"],"type":["VMLogicResult"]};

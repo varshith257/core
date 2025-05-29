@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["delete_did_handler","fetch_did_handler"]};

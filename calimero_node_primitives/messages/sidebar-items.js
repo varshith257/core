@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["NodeMessage"],"mod":["get_blob_bytes"]};

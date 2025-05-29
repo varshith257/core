@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["InvalidAlias"],"struct":["Alias"],"trait":["ScopedAlias"]};

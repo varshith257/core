@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["EXAMPLES"],"enum":["Commands","Protocol"],"fn":["main"],"mod":["config","driver","meroctl","merod","output","protocol","steps"],"struct":["Command","RootArgs","TestEnvironment"]};

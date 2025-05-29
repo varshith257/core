@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["global_runtime","init_global_runtime"],"macro":["actor","impl_stream_sender"],"mod":["adapters","lazy"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["check_for_update"],"static":["CURRENT_VERSION"],"struct":["Release"]};

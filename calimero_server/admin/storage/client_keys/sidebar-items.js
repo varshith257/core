@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["add_client_key","exists_client_key","get_client_key","get_context_client_key","remove_client_key"]};

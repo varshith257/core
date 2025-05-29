@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["read_only","temporal"],"trait":["Layer","LayerExt","ReadLayer","WriteLayer"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ErrorOperation","Icp","IcpError"],"struct":["Credentials","IcpConfig","IcpTransport","NetworkConfig"]};

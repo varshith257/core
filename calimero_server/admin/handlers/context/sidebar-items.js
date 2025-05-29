@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["create_context","delete_context","get_context","get_context_client_keys","get_context_identities","get_context_storage","get_contexts","grant_capabilities","invite_to_context","join_context","revoke_capabilities","update_context_application"]};

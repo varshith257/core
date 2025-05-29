@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ContextAtomic"],"mod":["client","messages"],"struct":["ContextAtomicKey"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ClientSelectedSigner","Credentials"],"struct":["ClientConfig","ClientConfigParams","ClientLocalConfig","ClientLocalSigner","ClientRelayerSigner","ClientSigner","LocalConfig","RawCredentials"]};

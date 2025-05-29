@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["get_jwt_secret","get_or_create_jwt_secret"],"struct":["JwtTokenSecret"]};

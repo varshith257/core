@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["CONFIG_FILE"],"mod":["serde_identity"],"struct":["BlobStoreConfig","ConfigFile","DataStoreConfig","NetworkConfig","ServerConfig","SyncConfig"]};

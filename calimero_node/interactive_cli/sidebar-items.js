@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["SubCommand"],"fn":["handle_line"],"mod":["call","common","context","peers","state","store","webui"],"struct":["RootCommand"]};

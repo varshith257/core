@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["ApplicationMeta","BlobMeta","ContextConfig","ContextIdentity","ContextMeta","ContextState","GenericData"],"trait":["PredefinedEntry"]};

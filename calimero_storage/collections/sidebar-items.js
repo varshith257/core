@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["error","unordered_map","unordered_set","vector"]};

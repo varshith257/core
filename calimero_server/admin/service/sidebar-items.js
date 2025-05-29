@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["parse_api_error"],"struct":["AdminConfig","ApiError","ApiResponse","Empty"]};

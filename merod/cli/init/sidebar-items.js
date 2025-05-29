@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["DEFAULT_SYNC_FREQUENCY","DEFAULT_SYNC_INTERVAL","DEFAULT_SYNC_TIMEOUT"],"enum":["BootstrapNetwork","ConfigProtocol"],"fn":["generate_local_signer"],"struct":["InitCommand"]};

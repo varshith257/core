@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["get_application","install_application","install_dev_application","list_applications","uninstall_application"]};

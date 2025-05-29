@@ -1,1 +1,0 @@
-searchState.loadedDescShard("calimero_sdk_macros", 0, "")

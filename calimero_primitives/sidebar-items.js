@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["alias","application","blobs","common","context","events","hash","identity","reflect","utils"]};

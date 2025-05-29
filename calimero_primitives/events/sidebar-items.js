@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ContextEventPayload","NodeEvent"],"struct":["ContextEvent","ExecutionEvent","ExecutionEventPayload","StateMutationPayload"]};

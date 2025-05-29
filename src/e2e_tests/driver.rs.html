@@ -703,31 +703,7 @@
 <a href="#702" id="702">702</a>
 <a href="#703" id="703">703</a>
 <a href="#704" id="704">704</a>
-<a href="#705" id="705">705</a>
-<a href="#706" id="706">706</a>
-<a href="#707" id="707">707</a>
-<a href="#708" id="708">708</a>
-<a href="#709" id="709">709</a>
-<a href="#710" id="710">710</a>
-<a href="#711" id="711">711</a>
-<a href="#712" id="712">712</a>
-<a href="#713" id="713">713</a>
-<a href="#714" id="714">714</a>
-<a href="#715" id="715">715</a>
-<a href="#716" id="716">716</a>
-<a href="#717" id="717">717</a>
-<a href="#718" id="718">718</a>
-<a href="#719" id="719">719</a>
-<a href="#720" id="720">720</a>
-<a href="#721" id="721">721</a>
-<a href="#722" id="722">722</a>
-<a href="#723" id="723">723</a>
-<a href="#724" id="724">724</a>
-<a href="#725" id="725">725</a>
-<a href="#726" id="726">726</a>
-<a href="#727" id="727">727</a>
-<a href="#728" id="728">728</a>
-<a href="#729" id="729">729</a></pre></div><pre class="rust"><code><span class="kw">use </span>core::fmt::Write;
+<a href="#705" id="705">705</a></pre></div><pre class="rust"><code><span class="kw">use </span>core::fmt::Write;
 <span class="kw">use </span>std::collections::btree_map::{BTreeMap, Entry <span class="kw">as </span>BTreeMapEntry};
 <span class="kw">use </span>std::collections::hash_map::{Entry <span class="kw">as </span>HashMapEntry, HashMap};
 <span class="kw">use </span>std::net::{IpAddr, SocketAddr};
@@ -753,7 +729,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::protocol::stellar::StellarSandboxEnvironment;
 <span class="kw">use </span><span class="kw">crate</span>::protocol::ProtocolSandboxEnvironment;
 <span class="kw">use </span><span class="kw">crate</span>::steps::TestScenario;
-<span class="kw">use </span><span class="kw">crate</span>::TestEnvironment;
+<span class="kw">use crate</span>::{Protocol, TestEnvironment};
 
 <span class="kw">pub struct </span>TestContext&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">pub </span>inviter: String,
@@ -763,7 +739,7 @@
     <span class="kw">pub </span>context_id: <span class="prelude-ty">Option</span>&lt;String&gt;,
     <span class="kw">pub </span>inviter_public_key: <span class="prelude-ty">Option</span>&lt;String&gt;,
     <span class="kw">pub </span>invitees_public_keys: HashMap&lt;String, String&gt;,
-    <span class="kw">pub </span>protocol_name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
+    <span class="kw">pub </span>protocol_name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Protocol,
     <span class="kw">pub </span>protocol: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ProtocolSandboxEnvironment,
     <span class="kw">pub </span>output_writer: OutputWriter,
     <span class="kw">pub </span>context_alias: <span class="prelude-ty">Option</span>&lt;String&gt;,
@@ -781,7 +757,7 @@
         invitees: Vec&lt;String&gt;,
         meroctl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Meroctl,
         output_writer: OutputWriter,
-        protocol_name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
+        protocol_name: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Protocol,
         proposal_id: <span class="prelude-ty">Option</span>&lt;String&gt;,
         protocol: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ProtocolSandboxEnvironment,
     ) -&gt; <span class="self">Self </span>{
@@ -824,133 +800,124 @@
         <span class="self">self</span>.environment.init().<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>report = TestRunReport::new();
-        <span class="kw">let </span><span class="kw-2">mut </span>initialized_protocols: HashMap&lt;String, ProtocolSandboxEnvironment&gt; = HashMap::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>initialized_protocols: HashMap&lt;Protocol, ProtocolSandboxEnvironment&gt; =
+            HashMap::new();
 
-        <span class="comment">// Run scenarios directory by directory
-        </span><span class="kw">let </span>scenarios_dir = <span class="self">self</span>.environment.input_dir.join(<span class="string">"scenarios"</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>entries = read_dir(scenarios_dir).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let </span>protocols_dir = <span class="self">self</span>.environment.input_dir.join(<span class="string">"protocols"</span>);
 
-        <span class="kw">while let </span><span class="prelude-val">Some</span>(entry) = entries.next_entry().<span class="kw">await</span><span class="question-mark">? </span>{
-            <span class="kw">let </span>path = entry.path();
-            <span class="kw">if </span>path.is_dir() {
-                <span class="kw">let </span>test_file_path = path.join(<span class="string">"test.json"</span>);
-                <span class="kw">if </span>test_file_path.exists() {
-                    <span class="kw">let </span>test_content = read(<span class="kw-2">&amp;</span>test_file_path).<span class="kw">await</span><span class="question-mark">?</span>;
-                    <span class="kw">let </span>test_json: serde_json::Value = from_slice(<span class="kw-2">&amp;</span>test_content)<span class="question-mark">?</span>;
-
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(protocol_name) = test_json.get(<span class="string">"protocol"</span>).and_then(|p| p.as_str())
-                    {
-                        <span class="comment">// Skip if this isn't one of the requested scenarios/protocols
-                        </span><span class="kw">if </span>!<span class="self">self
-                            </span>.environment
-                            .scenarios
-                            .iter()
-                            .any(|s| s.to_string().to_lowercase() == protocol_name)
-                        {
-                            <span class="kw">continue</span>;
-                        }
-
-                        <span class="comment">// Initialize protocol if not already done
-                        </span><span class="kw">if </span>!initialized_protocols.contains_key(protocol_name) {
-                            <span class="comment">// Find and initialize the protocol sandbox
-                            </span><span class="kw">for </span>protocol_sandbox <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.config.protocol_sandboxes {
-                                <span class="kw">let </span>config_protocol_name = <span class="kw">match </span>protocol_sandbox {
-                                    ProtocolSandboxConfig::Stellar(<span class="kw">_</span>) =&gt; <span class="string">"stellar"</span>,
-                                    ProtocolSandboxConfig::Near(<span class="kw">_</span>) =&gt; <span class="string">"near"</span>,
-                                    ProtocolSandboxConfig::Icp(<span class="kw">_</span>) =&gt; <span class="string">"icp"</span>,
-                                    ProtocolSandboxConfig::Ethereum(<span class="kw">_</span>) =&gt; <span class="string">"ethereum"</span>,
-                                };
-
-                                <span class="kw">if </span>config_protocol_name == protocol_name {
-                                    <span class="kw">let </span>sandbox_env = <span class="kw">match </span>protocol_sandbox {
-                                        ProtocolSandboxConfig::Stellar(config) =&gt; {
-                                            ProtocolSandboxEnvironment::Stellar(
-                                                StellarSandboxEnvironment::init(config.clone())<span class="question-mark">?</span>,
-                                            )
-                                        }
-                                        ProtocolSandboxConfig::Near(config) =&gt; {
-                                            ProtocolSandboxEnvironment::Near(
-                                                NearSandboxEnvironment::init(config.clone())
-                                                    .<span class="kw">await</span><span class="question-mark">?</span>,
-                                            )
-                                        }
-                                        ProtocolSandboxConfig::Icp(config) =&gt; {
-                                            ProtocolSandboxEnvironment::Icp(
-                                                IcpSandboxEnvironment::init(config.clone())<span class="question-mark">?</span>,
-                                            )
-                                        }
-                                        ProtocolSandboxConfig::Ethereum(config) =&gt; {
-                                            ProtocolSandboxEnvironment::Ethereum(
-                                                EthereumSandboxEnvironment::init(config.clone())<span class="question-mark">?</span>,
-                                            )
-                                        }
-                                    };
-                                    <span class="kw">if </span>initialized_protocols
-                                        .insert(protocol_name.to_owned(), sandbox_env)
-                                        .is_some()
-                                    {
-                                        <span class="self">self</span>.environment.output_writer.write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
-                                            <span class="string">"Warning: Overwriting existing protocol {}"</span>,
-                                            protocol_name
-                                        ));
-                                    }
-                                    <span class="kw">break</span>;
-                                }
-                            }
-                        }
-
-                        <span class="comment">// If we have the protocol initialized, run the scenario
-                        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(sandbox) = initialized_protocols.get(protocol_name) {
-                            <span class="kw">let </span>mero = <span class="self">self</span>.setup_mero(<span class="kw-2">&amp;</span><span class="macro">vec!</span>[sandbox.clone()]).<span class="kw">await</span><span class="question-mark">?</span>;
-
-                            <span class="kw">let </span><span class="prelude-val">Some</span>((inviter, invitees)) = <span class="self">self</span>.pick_inviter_node(<span class="kw-2">&amp;</span>mero.ds) <span class="kw">else </span>{
-                                <span class="macro">bail!</span>(<span class="string">"Not enough nodes to run the test"</span>)
-                            };
-
-                            <span class="self">self</span>.environment
-                                .output_writer
-                                .write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Picked inviter: {inviter}"</span>));
-                            <span class="self">self</span>.environment
-                                .output_writer
-                                .write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Picked invitees: {invitees:?}"</span>));
-
-                            <span class="kw">let </span><span class="kw-2">mut </span>ctx = TestContext::new(
-                                inviter,
-                                invitees,
-                                <span class="kw-2">&amp;</span>mero.ctl,
-                                <span class="self">self</span>.environment.output_writer,
-                                protocol_name,
-                                <span class="prelude-val">None</span>,
-                                sandbox,
-                            );
-
-                            <span class="comment">// Parse the scenario from already loaded test_content
-                            </span><span class="kw">let </span>scenario: TestScenario = from_slice(<span class="kw-2">&amp;</span>test_content)<span class="question-mark">?</span>;
-
-                            <span class="self">self</span>.environment
-                                .output_writer
-                                .write_header(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Running protocol {}"</span>, sandbox.name()), <span class="number">1</span>);
-
-                            report = <span class="self">self
-                                </span>.run_scenarios(
-                                    <span class="kw-2">&amp;mut </span>ctx,
-                                    report,
-                                    protocol_name,
-                                    scenario,
-                                    <span class="kw-2">&amp;</span>test_file_path,
-                                )
-                                .<span class="kw">await</span><span class="question-mark">?</span>;
-
-                            <span class="self">self</span>.environment
-                                .output_writer
-                                .write_header(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Finished protocol {}"</span>, sandbox.name()), <span class="number">1</span>);
-
-                            <span class="comment">// Stop mero after running scenarios
-                            </span><span class="self">self</span>.stop_merods(<span class="kw-2">&amp;</span>mero.ds).<span class="kw">await</span>;
-                        }
-                    }
-                }
+        <span class="kw">for </span>protocol <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.environment.protocols {
+            <span class="kw">if </span>initialized_protocols.contains_key(protocol) {
+                <span class="kw">continue</span>;
             }
+
+            <span class="kw">for </span>sandbox_cfg <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.config.protocol_sandboxes {
+                <span class="kw">let </span>config_protocol = <span class="kw">match </span>sandbox_cfg {
+                    ProtocolSandboxConfig::Stellar(<span class="kw">_</span>) =&gt; Protocol::Stellar,
+                    ProtocolSandboxConfig::Near(<span class="kw">_</span>) =&gt; Protocol::Near,
+                    ProtocolSandboxConfig::Icp(<span class="kw">_</span>) =&gt; Protocol::Icp,
+                    ProtocolSandboxConfig::Ethereum(<span class="kw">_</span>) =&gt; Protocol::Ethereum,
+                };
+
+                <span class="kw">if </span><span class="kw-2">&amp;</span>config_protocol != protocol {
+                    <span class="kw">continue</span>;
+                }
+
+                <span class="kw">let </span>sandbox_env = <span class="kw">match </span>sandbox_cfg {
+                    ProtocolSandboxConfig::Stellar(config) =&gt; ProtocolSandboxEnvironment::Stellar(
+                        StellarSandboxEnvironment::init(config.clone())<span class="question-mark">?</span>,
+                    ),
+                    ProtocolSandboxConfig::Near(config) =&gt; ProtocolSandboxEnvironment::Near(
+                        NearSandboxEnvironment::init(config.clone()).<span class="kw">await</span><span class="question-mark">?</span>,
+                    ),
+                    ProtocolSandboxConfig::Icp(config) =&gt; ProtocolSandboxEnvironment::Icp(
+                        IcpSandboxEnvironment::init(config.clone())<span class="question-mark">?</span>,
+                    ),
+                    ProtocolSandboxConfig::Ethereum(config) =&gt; {
+                        ProtocolSandboxEnvironment::Ethereum(EthereumSandboxEnvironment::init(
+                            config.clone(),
+                        )<span class="question-mark">?</span>)
+                    }
+                };
+
+                initialized_protocols.insert(<span class="kw-2">*</span>protocol, sandbox_env);
+                <span class="kw">break</span>;
+            }
+        }
+
+        <span class="kw">for </span>protocol_name <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.environment.protocols {
+            <span class="kw">let </span>protocol_path = protocols_dir.join(protocol_name.as_str());
+
+            <span class="kw">if </span>!protocol_path.is_dir() {
+                <span class="self">self</span>.environment.output_writer.write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+                    <span class="string">"No directory for protocol: {}"</span>,
+                    protocol_name.as_str()
+                ));
+                <span class="kw">continue</span>;
+            }
+
+            <span class="kw">let </span><span class="prelude-val">Some</span>(sandbox) = initialized_protocols.get(<span class="kw-2">&amp;</span>protocol_name) <span class="kw">else </span>{
+                <span class="macro">bail!</span>(
+                    <span class="string">"Sandbox not initialized for protocol: {}"</span>,
+                    protocol_name.as_str()
+                );
+            };
+
+            <span class="kw">let </span>mero = <span class="self">self</span>.setup_mero(<span class="kw-2">&amp;</span>sandbox.clone()).<span class="kw">await</span><span class="question-mark">?</span>;
+
+            <span class="kw">let </span><span class="prelude-val">Some</span>((inviter, invitees)) = <span class="self">self</span>.pick_inviter_node(<span class="kw-2">&amp;</span>mero.ds) <span class="kw">else </span>{
+                <span class="macro">bail!</span>(
+                    <span class="string">"Not enough nodes to run test for protocol {}"</span>,
+                    protocol_name.as_str()
+                )
+            };
+
+            <span class="self">self</span>.environment
+                .output_writer
+                .write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Picked inviter: {inviter}"</span>));
+            <span class="self">self</span>.environment
+                .output_writer
+                .write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Picked invitees: {invitees:?}"</span>));
+
+            <span class="kw">let </span><span class="kw-2">mut </span>applications = read_dir(<span class="kw-2">&amp;</span>protocol_path).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">while let </span><span class="prelude-val">Some</span>(app) = applications.next_entry().<span class="kw">await</span><span class="question-mark">? </span>{
+                <span class="kw">if </span>!app.file_type().<span class="kw">await</span><span class="question-mark">?</span>.is_file() {
+                    <span class="kw">continue</span>;
+                }
+                <span class="kw">let </span><span class="kw-2">mut </span>ctx = TestContext::new(
+                    inviter.clone(),
+                    invitees.clone(),
+                    <span class="kw-2">&amp;</span>mero.ctl,
+                    <span class="self">self</span>.environment.output_writer,
+                    protocol_name,
+                    <span class="prelude-val">None</span>,
+                    sandbox,
+                );
+                <span class="kw">let </span>test_file_path = app.path();
+
+                <span class="kw">let </span><span class="prelude-val">Some</span>(app_name) = test_file_path.file_stem().and_then(|s| s.to_str()) <span class="kw">else </span>{
+                    <span class="macro">bail!</span>(<span class="string">"No application name found"</span>);
+                };
+
+                <span class="kw">if </span>!test_file_path.is_file() {
+                    <span class="kw">continue</span>;
+                }
+                <span class="kw">let </span>test_content = read(<span class="kw-2">&amp;</span>test_file_path).<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="kw">let </span>scenario: TestScenario = from_slice(<span class="kw-2">&amp;</span>test_content)<span class="question-mark">?</span>;
+
+                <span class="self">self</span>.environment
+                    .output_writer
+                    .write_header(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Running protocol {}"</span>, sandbox.name()), <span class="number">1</span>);
+
+                report = <span class="self">self
+                    </span>.run_scenarios(<span class="kw-2">&amp;mut </span>ctx, report, app_name, scenario, <span class="kw-2">&amp;</span>test_file_path)
+                    .<span class="kw">await</span><span class="question-mark">?</span>;
+
+                <span class="self">self</span>.environment
+                    .output_writer
+                    .write_header(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Finished protocol {}"</span>, sandbox.name()), <span class="number">1</span>);
+            }
+
+            <span class="self">self</span>.stop_merods(<span class="kw-2">&amp;</span>mero.ds).<span class="kw">await</span>;
         }
 
         <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = report.result() {
@@ -970,10 +937,7 @@
         report.result()
     }
 
-    <span class="kw">async fn </span>setup_mero(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        sandbox_environments: <span class="kw-2">&amp;</span>Vec&lt;ProtocolSandboxEnvironment&gt;,
-    ) -&gt; EyreResult&lt;Mero&gt; {
+    <span class="kw">async fn </span>setup_mero(<span class="kw-2">&amp;</span><span class="self">self</span>, sandbox: <span class="kw-2">&amp;</span>ProtocolSandboxEnvironment) -&gt; EyreResult&lt;Mero&gt; {
         <span class="self">self</span>.environment
             .output_writer
             .write_header(<span class="string">"Starting merod nodes"</span>, <span class="number">2</span>);
@@ -994,11 +958,7 @@
                     <span class="self">self</span>.environment.test_id
                 )];
 
-                <span class="kw">let </span><span class="kw-2">mut </span>node_args = <span class="macro">vec!</span>[];
-                <span class="kw">for </span>sandbox <span class="kw">in </span>sandbox_environments {
-                    node_args = sandbox.node_args(<span class="kw-2">&amp;</span>node_name).<span class="kw">await</span><span class="question-mark">?</span>;
-                }
-
+                <span class="kw">let </span>node_args = sandbox.node_args(<span class="kw-2">&amp;</span>node_name).<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="kw">let </span>config_args = config_args.iter().chain(node_args.iter());
 
                 <span class="kw">let </span>merod = Merod::new(
@@ -1071,20 +1031,20 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         ctx: <span class="kw-2">&amp;mut </span>TestContext&lt;<span class="lifetime">'_</span>&gt;,
         <span class="kw-2">mut </span>report: TestRunReport,
-        scenario_name: <span class="kw-2">&amp;</span>str,
+        app_name: <span class="kw-2">&amp;</span>str,
         scenario: TestScenario,
         file_path: <span class="kw-2">&amp;</span>PathBuf,
     ) -&gt; EyreResult&lt;TestRunReport&gt; {
         <span class="kw">let </span>scenario_report = <span class="self">self
-            </span>.run_scenario(ctx, scenario_name, scenario, file_path)
+            </span>.run_scenario(ctx, app_name, scenario, file_path)
             .<span class="kw">await</span><span class="question-mark">?</span>;
 
         drop(
             report
                 .scenario_matrix
-                .entry(scenario_report.scenario_name.clone())
+                .entry(ctx.protocol_name.as_str().to_owned())
                 .or_default()
-                .insert(ctx.protocol_name.to_owned(), scenario_report),
+                .insert(app_name.to_owned(), scenario_report),
         );
 
         <span class="prelude-val">Ok</span>(report)
@@ -1093,7 +1053,7 @@
     <span class="kw">async fn </span>run_scenario(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         ctx: <span class="kw-2">&amp;mut </span>TestContext&lt;<span class="lifetime">'_</span>&gt;,
-        scenario_name: <span class="kw-2">&amp;</span>str,
+        app_name: <span class="kw-2">&amp;</span>str,
         scenario: TestScenario,
         file_path: <span class="kw-2">&amp;</span>PathBuf,
     ) -&gt; EyreResult&lt;TestScenarioReport&gt; {
@@ -1108,7 +1068,7 @@
             .output_writer
             .write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Steps count: {}"</span>, scenario.steps.len()));
 
-        <span class="kw">let </span><span class="kw-2">mut </span>report = TestScenarioReport::new(scenario_name.to_owned());
+        <span class="kw">let </span><span class="kw-2">mut </span>report = TestScenarioReport::new(app_name.to_owned());
 
         <span class="kw">let </span><span class="kw-2">mut </span>scenario_failed = <span class="bool-val">false</span>;
         <span class="kw">for </span>(i, step) <span class="kw">in </span>scenario.steps.iter().enumerate() {
@@ -1244,54 +1204,46 @@
 
     <span class="kw">fn </span>to_markdown(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; EyreResult&lt;String&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>markdown = String::new();
-
         <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"## E2E tests report"</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">for </span>(scenario, protocols) <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.scenario_matrix {
-            <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"### Scenario: {scenario}"</span>)<span class="question-mark">?</span>;
+        <span class="kw">for </span>(protocol, applications) <span class="kw">in </span><span class="kw-2">&amp;</span><span class="self">self</span>.scenario_matrix {
+            <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"### Protocol: {protocol}"</span>)<span class="question-mark">?</span>;
 
-            <span class="comment">// Collecting all step names
-            </span><span class="kw">let </span><span class="kw-2">mut </span>step_names = <span class="macro">vec!</span>[];
-            <span class="kw">for </span>report <span class="kw">in </span>protocols.values() {
+            <span class="kw">for </span>(app_name, report) <span class="kw">in </span>applications {
+                <span class="kw">let </span><span class="kw-2">mut </span>step_names = <span class="macro">vec!</span>[];
                 <span class="kw">for </span>step <span class="kw">in </span><span class="kw-2">&amp;</span>report.steps {
                     <span class="kw">if </span>!step_names.contains(<span class="kw-2">&amp;</span>step.step_name) {
                         step_names.push(step.step_name.clone());
                     }
                 }
-            }
 
-            <span class="comment">// Write table header
-            </span><span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"| Protocol/Step |"</span>)<span class="question-mark">?</span>;
-            <span class="kw">for </span>step_name <span class="kw">in </span><span class="kw-2">&amp;</span>step_names {
-                <span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">" {step_name} |"</span>)<span class="question-mark">?</span>;
-            }
-            <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown)<span class="question-mark">?</span>;
-
-            <span class="comment">// Write table header separator
-            </span><span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"| :--- |"</span>)<span class="question-mark">?</span>;
-            <span class="kw">for _ in </span><span class="kw-2">&amp;</span>step_names {
-                <span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">" :---: |"</span>)<span class="question-mark">?</span>;
-            }
-            <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown)<span class="question-mark">?</span>;
-
-            <span class="comment">// Write table rows
-            </span><span class="kw">for </span>(protocol, report) <span class="kw">in </span>protocols {
-                <span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"| {protocol} |"</span>)<span class="question-mark">?</span>;
+                <span class="comment">// Write table header
+                </span><span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"| Application/Step |"</span>)<span class="question-mark">?</span>;
                 <span class="kw">for </span>step_name <span class="kw">in </span><span class="kw-2">&amp;</span>step_names {
+                    <span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">" {step_name} |"</span>)<span class="question-mark">?</span>;
+                }
+                <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown)<span class="question-mark">?</span>;
+                <span class="comment">// Write table header separator
+                </span><span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"| :--- |"</span>)<span class="question-mark">?</span>;
+                <span class="kw">for _ in </span><span class="kw-2">&amp;</span>step_names {
+                    <span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">" :---: |"</span>)<span class="question-mark">?</span>;
+                }
+                <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown)<span class="question-mark">?</span>;
+                <span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"| {app_name} |"</span>)<span class="question-mark">?</span>;
+                <span class="comment">// Results row
+                </span><span class="kw">for </span>step_name <span class="kw">in </span><span class="kw-2">&amp;</span>step_names {
                     <span class="kw">let </span>result = report.steps.iter().find_map(|step| {
                         (<span class="kw-2">&amp;</span>step.step_name == step_name).then_some(step.result.as_ref())
                     });
-
                     <span class="kw">let </span>result = <span class="kw">match </span>result {
                         <span class="prelude-val">None </span>=&gt; <span class="string">"-"</span>,
                         <span class="prelude-val">Some</span>(<span class="prelude-val">None</span>) =&gt; <span class="string">":fast_forward:"</span>,
                         <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="kw">_</span>))) =&gt; <span class="string">":white_check_mark:"</span>,
                         <span class="prelude-val">Some</span>(<span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="kw">_</span>))) =&gt; <span class="string">":x:"</span>,
                     };
-
                     <span class="macro">write!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">" {result} |"</span>)<span class="question-mark">?</span>;
                 }
-                <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown)<span class="question-mark">?</span>;
+                <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown, <span class="string">"\n"</span>)<span class="question-mark">?</span>;
             }
             <span class="macro">writeln!</span>(<span class="kw-2">&amp;mut </span>markdown)<span class="question-mark">?</span>;
         }

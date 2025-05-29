@@ -103,7 +103,8 @@
 <a href="#102" id="102">102</a>
 <a href="#103" id="103">103</a>
 <a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a></pre></div><pre class="rust"><code><span class="kw">use </span>eyre::{bail, <span class="prelude-ty">Result</span> <span class="kw">as </span>EyreResult};
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a></pre></div><pre class="rust"><code><span class="kw">use </span>eyre::{bail, <span class="prelude-ty">Result</span> <span class="kw">as </span>EyreResult};
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>tokio::time::{sleep, Duration};
 
@@ -155,7 +156,8 @@
     </span><span class="kw">async fn </span>run_assert(<span class="kw-2">&amp;</span><span class="self">self</span>, ctx: <span class="kw-2">&amp;mut </span>TestContext&lt;<span class="lifetime">'_</span>&gt;) -&gt; EyreResult&lt;()&gt; {
         ctx.output_writer.write_str(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
             <span class="string">"Verifying external contract state in {} protocol for contract: {}"</span>,
-            ctx.protocol_name, <span class="self">self</span>.contract_id
+            ctx.protocol_name.as_str(),
+            <span class="self">self</span>.contract_id
         ));
 
         <span class="kw">let </span>max_retries = <span class="self">self</span>.retries.unwrap_or(<span class="number">1</span>);

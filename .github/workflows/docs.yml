@@ -27,13 +27,14 @@ jobs:
         cache-on-failure: true
         cache-all-crates: true
 
-    - name: Prepare GitHub Pages folder
+    - name: Build calimero-sdk docs
+      run: cargo doc --no-deps -p calimero-sdk
+
+    - name: Prepare doc root with shared rustdoc assets
       run: |
         mkdir -p ./target/doc-root
-        rsync -a ./target/doc/calimero_sdk/ ./target/doc-root/
-        # Copy shared rustdoc assets (JS, CSS, fonts)
-        find ./target/doc -maxdepth 1 -type f \( -name '*.js' -o -name '*.css' -o -name '*.woff' -o -name '*.svg' \) \
-          -exec cp {} ./target/doc-root/ \;
+        cp -r ./target/doc/calimero_sdk/* ./target/doc-root/
+        find ./target/doc -maxdepth 1 -type f \( -name '*.js' -o -name '*.css' -o -name '*.woff' -o -name '*.svg' \) -exec cp {} ./target/doc-root/ \;
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4

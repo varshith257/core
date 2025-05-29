@@ -1,0 +1,44 @@
+[package]
+name = "calimero-network"
+version = "0.1.0"
+authors.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+actix.workspace = true
+eyre.workspace = true
+futures-util.workspace = true
+libp2p = { workspace = true, features = [
+    "autonat",
+    "dcutr",
+    "gossipsub",
+    "identify",
+    "kad",
+    "macros",
+    "mdns",
+    "noise",
+    "ping",
+    "quic",
+    "rendezvous",
+    "relay",
+    "tokio",
+    "tcp",
+    "tls",
+    "yamux",
+] }
+libp2p-stream.workspace = true
+multiaddr.workspace = true
+owo-colors.workspace = true
+reqwest.workspace = true
+tokio = { workspace = true, features = ["io-util", "macros"] }
+tokio-stream = { workspace = true, features = ["time"] }
+tracing.workspace = true
+
+calimero-network-primitives.workspace = true
+calimero-utils-actix.workspace = true
+
+
+[lints]
+workspace = true

@@ -30,15 +30,8 @@ jobs:
     - name: Build calimero-sdk docs
       run: cargo doc --no-deps -p calimero-sdk
 
-    - name: Prepare GitHub Pages folder
-      run: |
-        mkdir -p ./target/doc-root
-        cp -r ./target/doc/calimero_sdk/* ./target/doc-root/
-        cp ./target/doc/*.css ./target/doc-root/ || true
-        cp ./target/doc/*.js ./target/doc-root/ || true
-
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./target/doc-root
+        publish_dir: ./target/doc
